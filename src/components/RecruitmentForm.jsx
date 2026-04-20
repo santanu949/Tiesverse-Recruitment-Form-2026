@@ -16,26 +16,38 @@ const schema = z.object({
     roles: z.array(z.string()).min(1, "Please select at least one role"),
     status: z.string().min(1, "Please select your current status"),
     qualification: z.string().min(1, "Please select your highest qualification"),
-    upscExperience: z.enum(["Yes", "No"], { required_error: "Please select an option" }),
-    upscAttempts: z.string().optional(),
+    examExperience: z.enum(["Yes", "No"], { required_error: "Please select an option" }),
+    examName: z.string().optional(),
+    examAttempts: z.string().optional(),
     contentExperience: z.string().min(1, "Please select your experience level"),
     portfolioLink: z.string().optional(),
     resume: z.any()
 }).superRefine((data, ctx) => {
-    if (data.upscExperience === "Yes" && (!data.upscAttempts || Number(data.upscAttempts) < 1)) {
-        ctx.addIssue({ path: ["upscAttempts"], message: "Please enter a valid number of attempts", code: z.ZodIssueCode.custom });
+    // Conditional Validation: Competitive Exams
+    if (data.examExperience === "Yes") {
+        if (!data.examName || data.examName.trim().length < 2) {
+            ctx.addIssue({ path: ["examName"], message: "Please enter the exam name", code: z.ZodIssueCode.custom });
+        }
+        if (!data.examAttempts || Number(data.examAttempts) < 1) {
+            ctx.addIssue({ path: ["examAttempts"], message: "Please enter a valid number of attempts", code: z.ZodIssueCode.custom });
+        }
     }
+    // Conditional Validation: Portfolio Link
     if (data.contentExperience !== "No experience" && (!data.portfolioLink || data.portfolioLink.length < 5)) {
         ctx.addIssue({ path: ["portfolioLink"], message: "Portfolio link or Handle is required for experienced candidates", code: z.ZodIssueCode.custom });
     }
 });
 
 const ROLES = [
-    "Content Researcher", "Content Writer", "Graphic Designer",
-    "Video Editor (Reels)", "Social Media Manager", "Outreach & Marketing"
+    "UPSC Content Researcher and Strategist",
+    "Content Writer (UPSC)",
+    "Graphic Designer",
+    "Video Editor (Reels & YouTube)",
+    "Social Media Manager (Instagram & YouTube)",
+    "Collaboration & Outreach Manager"
 ];
 
-// Helper function to convert file to base64 for Google Apps Script
+// Helper function to convert file to base64
 const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -60,7 +72,7 @@ export const RecruitmentForm = () => {
         defaultValues: { roles: [] }
     });
 
-    const watchUpsc = watch("upscExperience");
+    const watchExam = watch("examExperience");
     const watchContentExp = watch("contentExperience");
 
     const onSubmit = async (data) => {
@@ -68,12 +80,10 @@ export const RecruitmentForm = () => {
 
         try {
             let base64File = null;
-            // data.resume is a FileList from the input type="file"
             if (data.resume && data.resume.length > 0) {
                 base64File = await convertToBase64(data.resume[0]);
             }
 
-            // Prepare payload exactly as Apps Script expects it
             const payload = {
                 ...data,
                 resume: base64File
@@ -81,7 +91,6 @@ export const RecruitmentForm = () => {
 
             const response = await fetch(SCRIPT_URL, {
                 method: "POST",
-                // We omit Content-Type header to bypass strict CORS preflight checks on Apps Script
                 body: JSON.stringify(payload)
             });
 
@@ -89,7 +98,7 @@ export const RecruitmentForm = () => {
 
             if (result.status === "success") {
                 setSubmitStatus({ type: 'success', message: 'Application submitted successfully! We will be in touch.' });
-                reset(); // Clear the form
+                reset();
             } else {
                 setSubmitStatus({ type: 'error', message: result.message || 'Something went wrong.' });
             }
@@ -116,7 +125,7 @@ export const RecruitmentForm = () => {
 
                 {/* 2-Column Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                    <Input label="Full Name" placeholder="eg: Ashutosh Patra" {...register("fullName")} error={errors.fullName} />
+                    <Input label="Full Name" placeholder="eg: Santanu Samanta" {...register("fullName")} error={errors.fullName} />
                     <Input label="Email Address" type="email" placeholder="eg: yourname@email.com" {...register("email")} error={errors.email} />
 
                     <Input label="WhatsApp Number" type="tel" placeholder="eg: 9876543210" {...register("phone")} error={errors.phone} />
@@ -130,27 +139,30 @@ export const RecruitmentForm = () => {
                         { value: "Postgraduate", label: "Postgraduate" },
                         { value: "Other", label: "Other" }
                     ]} />
-                    <Select label="Appeared for UPSC / State PSC?" {...register("upscExperience")} error={errors.upscExperience} options={[
+
+                    <Select label="Have you appeared for any competitive exam?" {...register("examExperience")} error={errors.examExperience} options={[
                         { value: "Yes", label: "Yes" },
                         { value: "No", label: "No" }
                     ]} />
                 </div>
 
-                {watchUpsc === "Yes" && (
-                    <div className="w-full md:w-1/2 pr-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <Input label="Number of Attempts" type="number" placeholder="eg: 2" {...register("upscAttempts")} error={errors.upscAttempts} />
+                {/* Conditional Fields: Exam Details */}
+                {watchExam === "Yes" && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 animate-in fade-in slide-in-from-top-2 duration-300 -mt-3">
+                        <Input label="Name of Competitive Exam" placeholder="eg: UPSC CSE, State PSC" {...register("examName")} error={errors.examName} />
+                        <Input label="Number of Attempts" type="number" placeholder="eg: 2" {...register("examAttempts")} error={errors.examAttempts} />
                     </div>
                 )}
 
                 {/* Roles Section */}
                 <div className="space-y-3 pt-6 border-t-2 border-borderLight mt-8">
-                    <label className="text-sm font-extrabold text-textMain uppercase tracking-wide">Select Roles (Multiple allowed)</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <label className="text-sm font-extrabold text-textMain uppercase tracking-wide">Positions Open</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {ROLES.map((role) => (
                             <label key={role} className="flex items-center gap-3 cursor-pointer group bg-background border-2 border-borderLight p-3.5 rounded-xl hover:border-primary hover:shadow-md transition-all">
                                 <input type="checkbox" value={role} {...register("roles")}
-                                    className="w-5 h-5 rounded border-borderLight text-primary focus:ring-primary focus:ring-2 cursor-pointer" />
-                                <span className="text-sm text-textMain font-bold">{role}</span>
+                                    className="min-w-5 min-h-5 w-5 h-5 rounded border-borderLight text-primary focus:ring-primary focus:ring-2 cursor-pointer shrink-0" />
+                                <span className="text-sm text-textMain font-bold leading-tight">{role}</span>
                             </label>
                         ))}
                     </div>
