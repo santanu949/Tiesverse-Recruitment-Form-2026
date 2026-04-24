@@ -1,50 +1,72 @@
-# Tiesverse Recruitment Form 2026
+# 📝 TIESVERSE: Recruitment Portal
 
-A high-performance, responsive React web application designed to streamline the recruitment process. This project features a modern, high-contrast user interface with strict client-side validation and a serverless Google Apps Script backend that securely stores applicant data in Google Sheets and uploads resumes directly to Google Drive.
+[![React](https://img.shields.io/badge/React-Enabled-20232A?style=for-the-badge&logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind--CSS-Enabled-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](https://tiesverse.com)
 
-## 🚀 Features
+A standardized, high-conversion recruitment application portal designed for TIESVERSE. This platform streamlines the hiring process by providing a clean, focused interface for candidates to submit their professional details and portfolios.
 
-* **Modern UI/UX:** Built with a high-contrast light theme, featuring custom glassmorphism-inspired inputs, smooth layout transitions, and interactive hover states.
-* **Strict Validation:** Powered by Zod and React Hook Form for lightning-fast, secure client-side validation, including dynamic conditional fields (e.g., UPSC attempts, Portfolio links).
-* **Serverless Backend:** Integrates directly with a Google Apps Script API endpoint.
-* **Duplicate Prevention:** Backend logic checks against existing Google Sheet records to prevent duplicate email submissions.
-* **Automated File Handling:** Converts resume uploads (PDF/DOC) to base64, securely transferring and storing them in a designated Google Drive folder.
+## 🌟 Overview
+The **Recruitment Portal** is the first point of contact for potential talent. It focuses on a frictionless user experience to ensure high-quality applications are captured efficiently.
 
-## 🛠️ Tech Stack
+### The Core Idea
+By utilizing a structured form ecosystem, the portal ensures that all necessary candidate data—from basic contact info to complex portfolio links—is gathered in a consistent format, ready for administrative review.
 
-* **Frontend Framework:** React.js (via Vite)
-* **Styling:** Tailwind CSS (v3)
-* **Animation:** Framer Motion
-* **Form State & Validation:** React Hook Form + Zod
-* **Icons:** Lucide React
-* **Backend / Database:** Google Apps Script + Google Sheets + Google Drive
+---
 
-## 📦 Local Setup
+## ✨ Key Features
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/santanu949/Tiesverse-Recruitment-Form-2026.git](https://github.com/santanu949/Tiesverse-Recruitment-Form-2026.git)
-    cd Tiesverse-Recruitment-Form-2026
-    ```
+### 🎨 Premium UI/UX
+- **Modern Aesthetic**: A clean, professional layout with subtle gradients and a premium "Join Our Team" focus.
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop application submissions.
+- **Aesthetic Accents**: Subtle micro-animations and bold accent bars to enhance the candidate experience.
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+### 📋 Structured Data Capture
+- **Role Specification**: Allows candidates to apply for specific, predefined roles.
+- **Portfolio Integration**: Dedicated fields for resume and portfolio links to ensure easy access for recruiters.
+- **Validation-Ready**: Built for future integration with validation engines to ensure data integrity.
 
-3.  **Start the development server:**
-    ```bash
-    npm run dev
-    ```
-    The application will be running at `http://localhost:5173`.
+---
 
-## ⚙️ Backend Configuration
+## 🛠 Tech Stack
 
-To point the frontend to your own database:
-1. Open `src/components/RecruitmentForm.jsx`.
-2. Locate the `SCRIPT_URL` constant at the top of the file.
-3. Replace the URL with your deployed Google Apps Script Web App endpoint.
+| Component | Technology |
+| :--- | :--- |
+| **Framework** | [React](https://react.dev/) (Vite) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
+| **Icons** | Custom SVG Icons |
+| **Components** | Modular Functional Components |
 
-## 📄 License
+---
 
-© 2026 Tiesverse Foundation. All Rights Reserved.
+## 🏗 Project Structure
+- `src/components/`: Contains the core `RecruitmentForm` logic.
+- `src/App.jsx`: Main layout wrapper with the "Join Our Growing Team" messaging.
+- `public/`: Static assets and branding.
+
+---
+
+## ⚙️ Setup & Installation
+
+1. **Install Dependencies**:
+```bash
+npm install
+```
+
+2. **Run Development Server**:
+```bash
+npm run dev
+```
+
+---
+
+## 📈 Current Status
+- **Frontend UI**: Completed.
+- **Form Logic**: Functional.
+- **Backend Integration**: In progress.
+
+---
+
+<div align="center">
+  <p>© 2026 TIESVERSE | ALL RIGHTS RESERVED</p>
+</div>
